@@ -1,18 +1,20 @@
-import "dotenv/config";
+// packages/db/drizzle.config.ts
 
-import type { Config } from "drizzle-kit";
+// ... impor dan serverConfig (biarkan)
 
-import serverConfig from "@karakeep/shared/config";
+// Kita TIDAK lagi mengambil URL dari serverConfig.dataDir
+// Kita ambil URL dari Environment Variable (DATABASE_URL)
+const databaseURL = process.env.DATABASE_URL;
 
-const databaseURL = serverConfig.dataDir
-  ? `${serverConfig.dataDir}/db.db`
-  : "./db.db";
+if (!databaseURL) {
+  throw new Error("DATABASE_URL must be set for Drizzle Config!");
+}
 
 export default {
-  dialect: "sqlite",
+  dialect: "postgresql", // <-- UBAH KE POSTGRESQL
   schema: "./schema.ts",
   out: "./drizzle",
   dbCredentials: {
-    url: databaseURL,
+    url: databaseURL, // <-- AMBIL DARI ENV
   },
 } satisfies Config;
